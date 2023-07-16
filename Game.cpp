@@ -11,24 +11,35 @@ Manager manager;
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
+SDL_Rect Game::camera = { 0, 0, 800, 640 };
 
+// TODO (refactor) scrap this vector and just use colliderGroup
 std::vector<ColliderComponent*> Game::colliders;
 
 auto& player(manager.addEntity());
-auto& wall(manager.addEntity());
 
 enum groupLabels : std::size_t
 {
-	groupMap,
-	groupPlayers,
-	groupEnemies,
-	groupColliders
+	mapGroup,
+	playerGroup,
+	enemyGroup,
+	colliderGroup
 };
+
+auto& tiles(manager.getGroup(mapGroup));
+auto& players(manager.getGroup(playerGroup));
+auto& enemies(manager.getGroup(enemyGroup));
+//auto& colliders(manager.getGroup(colliderGroup));
+
+const char* terrainTiles = "assets/terrain.png";
+
+bool Game::isRunning = false;
 
 Game::Game()
 {
 	counter = 0;
 }
+
 Game::~Game()
 {
 
@@ -74,18 +85,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 				isRunning = true;
 
 				//map = new Map();
-				Map::LoadMap("assets/16x16_island.map", 16, 16);
+				Map::LoadMap("assets/map0.map", 16, 16);
 				
-				player.addComponent<TransformComponent>(2);
-				player.addComponent<SpriteComponent>("assets/peach.png");
+				player.addComponent<TransformComponent>(4);
+				player.addComponent<SpriteComponent>("assets/ship.png", true);
 				player.addComponent<KeyboardController>();
 				player.addComponent <ColliderComponent>("player");
-				player.addGroup(groupPlayers);
+				player.addGroup(playerGroup);
 
-				wall.addComponent<TransformComponent>(400.0f, 320.0f, 32, 32, 1);
-				wall.addComponent<SpriteComponent>("assets/dirt.png");
-				wall.addComponent<ColliderComponent>("wall");
-				wall.addGroup(groupMap);
+
 			}
 		}
 	}
@@ -111,16 +119,24 @@ void Game::update()
 	manager.refresh();
 	manager.update();
 
+	// TODO: the following will break if our map is a different size, shape, or scale!
+	//		 We need some variables to keep track of the current map bounds
+	camera.x = player.getComponent<TransformComponent>().position.x - 400 + 64;
+	camera.y = player.getComponent<TransformComponent>().position.y - 320 + 64;
+	if (camera.x < 0) camera.x = 0;
+	if (camera.y < 0) camera.y = 0;
+	if (camera.x + camera.w > 1024) camera.x = 1024 - camera.w;
+	if (camera.y + camera.h > 1024) camera.y = 1024 - camera.h;
+
+	/*
+	// Check for binary collisions:
 	for (auto& cc : colliders)
 	{
 		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
 	}
+	*/
 
 }
-
-auto& tiles(manager.getGroup(groupMap));
-auto& players(manager.getGroup(groupPlayers));
-auto& enemies(manager.getGroup(groupEnemies));
 
 void Game::render()
 {
@@ -154,9 +170,9 @@ void Game::clean()
 	std::cout << "Game cleaned!" << std::endl;
 }
 
-void Game::AddTile(int id, int x, int y)
+void Game::AddTile(int srcX, int srcY, int xPos, int yPos)
 {
 	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, 32, 32, id);
-	tile.addGroup(groupMap);
+	tile.addComponent<TileComponent>(srcX, srcY, xPos, yPos, terrainTiles);
+	tile.addGroup(mapGroup);
 }

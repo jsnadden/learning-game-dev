@@ -1,56 +1,50 @@
 #pragma once
 #include "ECS.hpp"
-#include "TransformComponent.hpp"
-#include "SpriteComponent.hpp"
 #include "SDL.h"
 
 class TileComponent : public Component
 {
 public:
-	TransformComponent* transform;
-	SpriteComponent* sprite;
 
-	SDL_Rect tileRect;
-	int tileID;
-	const char* path;
+	SDL_Texture* texture;
+	SDL_Rect srcRect, destRect;
+	Vector2D position;
 
 	TileComponent() = default;
 
-	TileComponent(int xIn, int yIn, int widthIn, int heightIn, int idIn)
+	~TileComponent()
 	{
-		tileRect.x = xIn;
-		tileRect.y = yIn;
-		tileRect.w = widthIn;
-		tileRect.h = heightIn;
-
-		tileID = idIn;
-
-		switch (tileID)
-		{
-		case 0:
-			path = "assets/water.png";
-			break;
-		case 1:
-			path = "assets/dirt.png";
-			break;
-		case 2:
-			path = "assets/grass.png";
-			break;
-		default:
-			break;
-		}
-
-
+		SDL_DestroyTexture(texture);
 	}
 
-	void init() override
+	TileComponent(int srcX, int srcY, int xPos, int yPos, const char* path)
 	{
-		entity->addComponent<TransformComponent>(static_cast<float>(tileRect.x), static_cast<float>(tileRect.y), tileRect.w, tileRect.h, 1);
-		transform = &entity->getComponent<TransformComponent>();
+		texture = TextureManager::loadTexture(path);
 
-		entity->addComponent<SpriteComponent>(path);
-		sprite = &entity->getComponent<SpriteComponent>();
-		
+		srcRect.x = srcX;
+		srcRect.y = srcY;
+		srcRect.w = srcRect.h = 32;
+
+		destRect.x = xPos;
+		destRect.y = yPos;
+		destRect.w = destRect.h = 64;
+
+		position.x = xPos;
+		position.y = yPos;
+	}
+
+	void update() override
+	{
+		destRect.x = position.x - Game::camera.x;
+		destRect.y = position.y - Game::camera.y;
+	}
+
+	void draw() override
+	{
+		/* TODO: only draw tiles which are currently visible/on screen.
+				 I'll research how this is typically done, but I guess adding
+				 a "bool active" flag would be fine */ 
+		TextureManager::Draw(texture, srcRect, destRect, SDL_FLIP_NONE);
 	}
 
 

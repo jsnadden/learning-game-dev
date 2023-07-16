@@ -29,7 +29,9 @@ public:
 
 	TransformComponent(int scaleIn)
 	{
-		position.Zero();
+		// Place the object in the screen center
+		position.x = 400 - (width * scaleIn / 2);
+		position.y = 320 - (height * scaleIn / 2);
 		scale = scaleIn;
 	}
 
@@ -49,9 +51,13 @@ public:
 
 	void update() override
 	{
+
+		
+		
 		position.x += velocity.x * speed;
 		position.y += velocity.y * speed;
-		if (position.x < 0 || position.x > 800 - 64 || position.y < 0 || position.y > 640 - 64) { position.x = (float)(400 - 32); position.y = (float)(300 - 32); }
+		//if (position.x < 0 || position.x > 800 - 64 || position.y < 0 || position.y > 640 - 64) { position.x = (float)(400 - 32); position.y = (float)(300 - 32); }
+
 	}
 
 };

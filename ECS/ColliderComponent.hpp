@@ -29,8 +29,8 @@ public:
 
 	void update() override
 	{
-		collider.x = static_cast<int>(transform->position.x);
-		collider.y = static_cast<int>(transform->position.y);
+		collider.x = static_cast<int>(transform->position.x) - Game::camera.x;
+		collider.y = static_cast<int>(transform->position.y) - Game::camera.y;
 		collider.w = (transform->width) * (transform->scale);
 		collider.h = (transform->height) * (transform->scale);
 	}

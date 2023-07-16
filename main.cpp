@@ -4,8 +4,8 @@
 #include "Vector2D.hpp"
 
 Game* game = nullptr;
-int WINDOW_WIDTH = 512;
-int WINDOW_HEIGHT = 512;
+int WINDOW_WIDTH = 800;
+int WINDOW_HEIGHT = 640;
 
 int main(int argc, char* argv[])
 {
@@ -15,10 +15,10 @@ int main(int argc, char* argv[])
 	int frameTime;
 
 	game = new Game();
-	game->init("A window title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, false);
+	game->init("Untitled pirate game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, false);
 
 	// Game loop
-	while (game->running())
+	while (Game::isRunning)
 	{
 		frameStart = SDL_GetTicks();
 

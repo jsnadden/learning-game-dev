@@ -29,6 +29,7 @@
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ECS\Animation.hpp" />
     <ClInclude Include="ECS\ColliderComponent.hpp" />
     <ClInclude Include="ECS\Components.hpp" />
     <ClInclude Include="ECS\ECS.hpp" />
