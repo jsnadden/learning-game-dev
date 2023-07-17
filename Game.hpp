@@ -28,9 +28,6 @@ public:
 	static SDL_Event event;
 	static SDL_Rect camera;
 
-	static int windowWidth;
-	static int windowHeight;
-
 	static enum groupLabels : std::size_t
 	{
 		mapGroup,
@@ -42,5 +39,4 @@ public:
 private:
 	
 	SDL_Window* window;
-	int counter;
 };

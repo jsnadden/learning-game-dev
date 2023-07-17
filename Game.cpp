@@ -11,6 +11,9 @@ Manager manager;
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
+
+int windowWidth = 800;
+int windowHeight = 640;
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
 
 auto& player(manager.addEntity());
@@ -23,17 +26,16 @@ auto& colliders(manager.getGroup(Game::colliderGroup));
 bool Game::isRunning = false;
 
 Game::Game()
-{
-	counter = 0;
-}
+{}
 
 Game::~Game()
-{
-
-}
+{}
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
+	windowWidth = width;
+	windowHeight = height;
+
 	int flags = 0;
 	if (fullscreen)
 	{
@@ -74,10 +76,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 				map = new Map("assets/terrain.png", 32, 2);
 				map->LoadMap("assets/map0.txt", 16, 16);
 				
-				player.addComponent<TransformComponent>(4);
+				int playerSize = 32;
+				int playerScale = 2;
+				player.addComponent<TransformComponent>(playerScale);
 				player.addComponent<SpriteComponent>("assets/ship.png", true);
 				player.addComponent<KeyboardController>();
-				player.addComponent <ColliderComponent>("player");
+				player.addComponent <ColliderComponent>("player", 0, 0, playerSize * playerScale);
 				player.addGroup(Game::playerGroup);
 
 
@@ -109,10 +113,10 @@ void Game::update()
 	manager.update();
 
 	SDL_Rect playerCollider = player.getComponent<ColliderComponent>().collider;
+	TransformComponent* playerTransform = &player.getComponent<TransformComponent>();
 
-	// TODO: set up variables for window, player and map sizes, automating the numbers below
-	camera.x = player.getComponent<TransformComponent>().position.x - 400 + 64;
-	camera.y = player.getComponent<TransformComponent>().position.y - 320 + 64;
+	camera.x = playerTransform->position.x - (windowWidth - (playerTransform->width * playerTransform->scale)) / 2;
+	camera.y = playerTransform->position.y - (windowHeight - (playerTransform->height * playerTransform->scale)) / 2;
 	if (camera.x < 0) camera.x = 0;
 	if (camera.y < 0) camera.y = 0;
 	if (camera.x + camera.w > 1024) camera.x = 1024 - camera.w;
@@ -125,7 +129,6 @@ void Game::update()
 
 		if ( Collision::AABB(playerCollider, cCollider) )
 		{
-			std::cout << "Collision detected!" << std::endl;
 			player.getComponent<TransformComponent>().position = playerLastPosition;
 		}
 	}
