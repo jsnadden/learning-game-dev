@@ -4,6 +4,7 @@
 #include "../TextureManager.hpp"
 #include "Animation.hpp"
 #include <map>
+#include "AssetManager.hpp"
 
 class SpriteComponent : public Component
 {
@@ -47,9 +48,7 @@ public:
 	}
 
 	~SpriteComponent()
-	{
-		SDL_DestroyTexture(texture);
-	}
+	{}
 
 	void setTexture(std::string id)
 	{

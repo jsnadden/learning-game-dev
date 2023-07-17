@@ -1,6 +1,7 @@
 #pragma once
 #include "ECS.hpp"
 #include "SDL.h"
+#include "AssetManager.hpp"
 
 class TileComponent : public Component
 {
