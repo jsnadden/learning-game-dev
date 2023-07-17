@@ -5,7 +5,7 @@ class Map
 {
 public:
 
-	Map(const char* mfp, int ts, int ms);
+	Map(std::string id, int ts, int ms);
 	~Map();
 
 	void LoadMap(std::string path, int sizeX, int sizeY);
@@ -13,7 +13,7 @@ public:
 	
 private:
 
-	const char* mapFilePath;
+	std::string textureID;
 	int tileSize;
 	int mapScale;
 	int scaledSize;

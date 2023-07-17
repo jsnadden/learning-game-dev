@@ -16,6 +16,8 @@ int windowWidth = 800;
 int windowHeight = 640;
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
 
+AssetManager* Game::assets = new AssetManager(&manager);
+
 auto& player(manager.addEntity());
 
 auto& tiles(manager.getGroup(Game::mapGroup));
@@ -73,13 +75,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 				isRunning = true;
 
-				map = new Map("assets/terrain.png", 32, 2);
+				assets->AddTexture("terrain", "assets/terrain.png");
+				assets->AddTexture("player", "assets/ship.png");
+
+				// This is the game content for now:
+				map = new Map("terrain", 32, 2);
 				map->LoadMap("assets/map0.txt", 16, 16);
 				
 				int playerSize = 32;
 				int playerScale = 2;
 				player.addComponent<TransformComponent>(playerScale);
-				player.addComponent<SpriteComponent>("assets/ship.png", true);
+				player.addComponent<SpriteComponent>("player", true);
 				player.addComponent<KeyboardController>();
 				player.addComponent <ColliderComponent>("player", 0, 0, playerSize * playerScale);
 				player.addGroup(Game::playerGroup);
