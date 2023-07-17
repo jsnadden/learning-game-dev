@@ -37,6 +37,7 @@
     <ClInclude Include="ECS\ECS.hpp" />
     <ClInclude Include="Collision.hpp" />
     <ClInclude Include="ECS\KeyboardController.hpp" />
+    <ClInclude Include="ECS\ProjectileComponent.hpp" />
     <ClInclude Include="ECS\TileComponent.hpp" />
     <ClInclude Include="ECS\TransformComponent.hpp" />
     <ClInclude Include="ECS\SpriteComponent.hpp" />

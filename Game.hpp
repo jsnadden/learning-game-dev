@@ -36,7 +36,8 @@ public:
 		mapGroup,
 		playerGroup,
 		enemyGroup,
-		colliderGroup
+		colliderGroup,
+		projectileGroup
 	};
 
 private:
