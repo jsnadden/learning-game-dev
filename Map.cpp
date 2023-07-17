@@ -1,16 +1,21 @@
 #include "Map.hpp"
 #include "Game.hpp"
 #include <fstream>
+#include "ECS/ECS.hpp"
+#include "ECS/Components.hpp"
 
-Map::Map()
+extern Manager manager;
+
+Map::Map(const char* mfp, int ts, int ms)
 {
-
+	mapFilePath = mfp;
+	tileSize = ts;
+	mapScale = ms;
+	scaledSize = ts * ms;
 }
 
 Map::~Map()
-{
-
-}
+{}
 
 void Map::LoadMap(std::string path, int sizeX, int sizeY)
 {
@@ -25,13 +30,39 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 		for (int x = 0; x < sizeX; x++)
 		{
 			mapfile.get(c);
-			srcY = atoi(&c) * 32;
+			srcY = atoi(&c) * tileSize;
 			mapfile.get(c);
-			srcX = atoi(&c) * 32;
-			Game::AddTile(srcX, srcY, x * 64, y * 64);
+			srcX = atoi(&c) * tileSize;
+			AddTile(srcX, srcY, x * scaledSize, y * scaledSize);
+			mapfile.ignore();
+		}
+	}
+
+	mapfile.ignore();
+
+	for (int y = 0; y < sizeY; y++)
+	{
+		for (int x = 0; x < sizeX; x++)
+		{
+			mapfile.get(c);
+
+			if (c == '1')
+			{
+				auto& tileCollider(manager.addEntity());
+				tileCollider.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
+				tileCollider.addGroup(Game::colliderGroup);
+			}
+
 			mapfile.ignore();
 		}
 	}
 
 	mapfile.close();
+}
+
+void Map::AddTile(int srcX, int srcY, int xPos, int yPos)
+{
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tileSize, mapScale, mapFilePath);
+	tile.addGroup(Game::mapGroup);
 }

@@ -23,13 +23,21 @@ public:
 
 	void clean();
 
-	static void AddTile(int srcX, int srcY, int xPos, int yPos);
-
 	static bool isRunning;
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
 	static SDL_Rect camera;
-	static std::vector<ColliderComponent*> colliders;
+
+	static int windowWidth;
+	static int windowHeight;
+
+	static enum groupLabels : std::size_t
+	{
+		mapGroup,
+		playerGroup,
+		enemyGroup,
+		colliderGroup
+	};
 
 private:
 	
