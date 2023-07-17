@@ -9,12 +9,15 @@ AssetManager::AssetManager(Manager* man)
 AssetManager::~AssetManager()
 {}
 
-void AssetManager::CreateProjectile(Vector2D position, int range, int speed, std::string id)
+void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)
 {
+	int centerX = position.x + 16;
+	int centerY = position.y + 16;
+
 	auto& projectile(manager->addEntity());
-	projectile.addComponent<TransformComponent>(position.x, position.y, 32, 32, 1);
-	projectile.addComponent<SpriteComponent>("projectile_test", false);
-	projectile.addComponent<ProjectileComponent>(range, speed);
+	projectile.addComponent<TransformComponent>(centerX, centerY, 32, 32, 1);
+	projectile.addComponent<SpriteComponent>("projectile", false);
+	projectile.addComponent<ProjectileComponent>(range, speed, velocity);
 	projectile.addComponent<ColliderComponent>("projectile");
 	projectile.addGroup(Game::projectileGroup);
 }

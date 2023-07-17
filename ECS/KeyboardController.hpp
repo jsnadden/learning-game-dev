@@ -43,6 +43,10 @@ public:
 			case SDLK_ESCAPE:
 				Game::isRunning = false;
 				break;
+			case SDLK_SPACE:
+				// TODO: implement aiming, offset initial position in velocity direction
+				Game::assets->CreateProjectile(transform->position, Vector2D(5.f,0.f), 100, 2, "projectile");
+				break;
 			default:
 				break;
 			}

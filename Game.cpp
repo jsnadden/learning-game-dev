@@ -25,6 +25,7 @@ auto& tiles(manager.getGroup(Game::mapGroup));
 auto& players(manager.getGroup(Game::playerGroup));
 auto& enemies(manager.getGroup(Game::enemyGroup));
 auto& colliders(manager.getGroup(Game::colliderGroup));
+auto& projectiles(manager.getGroup(Game::projectileGroup));
 
 bool Game::isRunning = false;
 
@@ -78,6 +79,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 				assets->AddTexture("terrain", "assets/terrain.png");
 				assets->AddTexture("player", "assets/ship.png");
+				assets->AddTexture("projectile", "assets/cannonball.png");
 
 				// This is the game content for now:
 				map = new Map("terrain", 32, 2);
@@ -90,8 +92,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 				player.addComponent<KeyboardController>();
 				player.addComponent <ColliderComponent>("player", 0, 0, playerSize * playerScale);
 				player.addGroup(Game::playerGroup);
-
-
 			}
 		}
 	}
@@ -130,13 +130,23 @@ void Game::update()
 	if (camera.y + camera.h > 1024) camera.y = 1024 - camera.h;
 
 	// Check for binary collisions:
-	for (auto& cc : colliders)
+	for (auto& c : colliders)
 	{
-		SDL_Rect cCollider = cc->getComponent<ColliderComponent>().collider;;
+		SDL_Rect cCollider = c->getComponent<ColliderComponent>().collider;
 
 		if ( Collision::AABB(playerCollider, cCollider) )
 		{
 			player.getComponent<TransformComponent>().position = playerLastPosition;
+		}
+	}
+
+	for (auto& p : projectiles)
+	{
+		SDL_Rect pCollider = p->getComponent<ColliderComponent>().collider;
+
+		if (Collision::AABB(playerCollider, pCollider))
+		{
+			//std::cout << "Projectile hit player!" << std::endl;
 		}
 	}
 
@@ -164,6 +174,11 @@ void Game::render()
 	for (auto& c : colliders)
 	{
 		c->draw();
+	}
+
+	for (auto& p : projectiles)
+	{
+		p->draw();
 	}
 
 	// Send to display
