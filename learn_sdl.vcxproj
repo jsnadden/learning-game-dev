@@ -41,6 +41,7 @@
     <ClInclude Include="ECS\TileComponent.hpp" />
     <ClInclude Include="ECS\TransformComponent.hpp" />
     <ClInclude Include="ECS\SpriteComponent.hpp" />
+    <ClInclude Include="ECS\UILabelComponent.h" />
     <ClInclude Include="Vector2D.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameObject.hpp" />
@@ -106,7 +107,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\johns_shbfd3b\Documents\C++\SDL2-2.28.1\include;C:\Users\johns_shbfd3b\Documents\C++\SDL2_image-2.6.3\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\johns_shbfd3b\Documents\C++\SDL2-2.28.1\include;C:\Users\johns_shbfd3b\Documents\C++\SDL2_ttf-2.20.2\include;C:\Users\johns_shbfd3b\Documents\C++\SDL2_image-2.6.3\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\johns_shbfd3b\Documents\C++\SDL2-2.28.1\lib\x64;C:\Users\johns_shbfd3b\Documents\C++\SDL2_image-2.6.3\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -143,11 +144,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\johns_shbfd3b\Documents\C++\SDL2_ttf-2.20.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\johns_shbfd3b\Documents\C++\SDL2_ttf-2.20.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

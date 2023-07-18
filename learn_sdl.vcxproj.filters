@@ -92,6 +92,9 @@
     <ClInclude Include="ECS\ProjectileComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ECS\UILabelComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\peach.png">

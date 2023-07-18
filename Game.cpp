@@ -21,6 +21,8 @@ AssetManager* Game::assets = new AssetManager(&manager);
 
 auto& player(manager.addEntity());
 
+auto& label(manager.addEntity());
+
 auto& tiles(manager.getGroup(Game::mapGroup));
 auto& players(manager.getGroup(Game::playerGroup));
 auto& enemies(manager.getGroup(Game::enemyGroup));
@@ -75,23 +77,37 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 				// Set background colour to white
 				SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
 
-				isRunning = true;
+				if (TTF_Init() == -1)
+				{
+					printf("SDL_TTF could not initialize! SDL_Error: %s\n", SDL_GetError());
+					isRunning = false;
+				}
+				else
+				{
+					isRunning = true;
 
-				assets->AddTexture("terrain", "assets/terrain.png");
-				assets->AddTexture("player", "assets/ship.png");
-				assets->AddTexture("projectile", "assets/cannonball.png");
+					assets->AddTexture("terrain", "assets/terrain.png");
+					assets->AddTexture("player", "assets/ship.png");
+					assets->AddTexture("projectile", "assets/cannonball.png");
 
-				// This is the game content for now:
-				map = new Map("terrain", 32, 2);
-				map->LoadMap("assets/map0.txt", 16, 16);
-				
-				int playerSize = 32;
-				int playerScale = 2;
-				player.addComponent<TransformComponent>(playerScale);
-				player.addComponent<SpriteComponent>("player", true);
-				player.addComponent<KeyboardController>();
-				player.addComponent <ColliderComponent>("player", 0, 0, playerSize * playerScale);
-				player.addGroup(Game::playerGroup);
+					assets->AddFont("arcade", "assets/arcade_font.ttf", 16);
+
+					// This is the game content for now:
+					map = new Map("terrain", 32, 2);
+					map->LoadMap("assets/map0.txt", 16, 16);
+
+					int playerSize = 32;
+					int playerScale = 2;
+					player.addComponent<TransformComponent>(playerScale);
+					player.addComponent<SpriteComponent>("player", true);
+					player.addComponent<KeyboardController>();
+					player.addComponent <ColliderComponent>("player", 0, 0, playerSize * playerScale);
+					player.addGroup(Game::playerGroup);
+					SDL_Colour white = { 255, 255, 255, 255 };
+					label.addComponent<UILabelComponent>(10, 10, "Yarr!", "arcade", white);
+
+
+				}
 			}
 		}
 	}
@@ -180,6 +196,8 @@ void Game::render()
 	{
 		p->draw();
 	}
+
+	label.draw();
 
 	// Send to display
 	SDL_RenderPresent(Game::renderer);
